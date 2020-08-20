@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<head>
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+ <link href = "https://code.jquery.com/ui/1.10.4/themes/ui-lightness/jquery-ui.css"
+         rel = "stylesheet">
+      <script src = "https://code.jquery.com/jquery-1.10.2.js"></script>
+      <script src = "https://code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
+</head>
+<body>
+	<div class="input-group mb-3">
+	  <input type="text" name="search" class="form-control" onkeyup="search()" id="search" placeholder="Search by name" >
+	  
+	</div>
+	<div class="input-group mb-3">
+	  <input type="text" name="search" onkeyup="searchb()" class="form-control" id="searchb" placeholder="Search by rollno" >
+	  
+	</div>
+	<table class="table">
+	  <tr>
+	    <th scope="row">Roll No</th>
+	    <th scope="row">Name</th>
+	    <th scope="row">Department</th>
+	  </tr>
+	  <%for(i=0;i<m.length;i++){%>
+	  <tr>
+	    <td scope="col" class="rollno a"><%=m[i].rollno%></td>
+	    <td scope="col" class="name a"><%=m[i].name%></td>
+	    <td scope="col" class="dept a"><%=m[i].dept%></td>
+	  </tr>
+	  <%}%>
+	  
+	</table>
+	<script type="text/javascript">
+		function search(){
+			var j=document.getElementsByClassName("a");
+			var b=<%=m.length%>;
+		
+			for(i=0;i<3*b;i++){
+				j[i].innerHTML="";
+			}
+
+			var string=[];	
+			var search=document.getElementById("search").value;
+			var out={
+				search: search
+			};
+			var request=new XMLHttpRequest();		
+			request.open("POST","http://localhost:3000/ajax");			
+			request.onreadystatechange=function(){
+				if(request.readyState==4){
+					string=request.response;
+					var np=JSON.parse(string);
+					
+					for(i=0;i<np.name.length;i++){
+						
+						document.getElementsByClassName("name")[i].innerHTML=np.name[i];
+						document.getElementsByClassName("rollno")[i].innerHTML=np.rollno[i];
+						document.getElementsByClassName("dept")[i].innerHTML=np.dept[i];
+					}
+					
+				}
+
+				
+			}
+			request.setRequestHeader('Content-Type', 'application/json;charset=UTF-8');
+			request.send(JSON.stringify(out));
+			
+		}
+		function searchb(){
+			
+
+			var string=[];	
+			var search=document.getElementById("searchb").value;
+			var out={
+				search: search
+			};
+			var request=new XMLHttpRequest();		
+			request.open("POST","http://localhost:3000/ajaxd");			
+			request.onreadystatechange=function(){
+				if(request.readyState==4){
+					string=request.response;
+					var np=JSON.parse(string);
+					
+					for(i=0;i<np.name.length;i++){
+						
+						document.getElementsByClassName("name")[i].innerHTML=np.name[i];
+						document.getElementsByClassName("rollno")[i].innerHTML=np.rollno[i];
+						document.getElementsByClassName("dept")[i].innerHTML=np.dept[i];
+					}
+					
+				}
+
+				
+			}
+			request.setRequestHeader('Content-Type', 'application/json;charset=UTF-8');
+			request.send(JSON.stringify(out));
+			
+		}
+	</script>
+	<script>
+         $(function() {
+            $( "#search" ).autocomplete({
+               source: <%=m.name%>
+            });
+         });
+      </script>
+
+</body>
